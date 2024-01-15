@@ -111,10 +111,12 @@ struct App : public om::App {
   // Some of these variable can be changed accordingly for each session. - Weikang
 
   // file name
-  std::string lever1_animal{ "Ginger" };
-  std::string lever2_animal{ "Dodson" };
+  std::string lever1_animal{ "Vermelho" };
+  std::string lever2_animal{ "Koala" };
 
-  std::string experiment_date{ "20231205" };
+
+
+  std::string experiment_date{ "20240115" };
 
   //std::string trialrecords_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_TrialRecord_1.json" ;
   //std::string bhvdata_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_bhv_data_1.json" ;
@@ -122,7 +124,7 @@ struct App : public om::App {
   //std::string leverread_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_lever_reading_1.json";
 
 
-  int tasktype{ 1 }; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training
+  int tasktype{ 3 }; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training
 
   // int tasktype{rand()%2}; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training 
   // int tasktype{ rand()%4}; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training 
@@ -169,7 +171,7 @@ struct App : public om::App {
 
   bool leverpulled[2]{ false, false };
   float leverpulledtime[2]{ 0,0 };  //mostly for the cooperative condition (taskytype = 3)
-  float pulledtime_thres{ 1.0f }; // time difference that two animals has to pull the lever 
+  float pulledtime_thres{ 1.5f }; // time difference that two animals has to pull the lever 
 
   bool automated_pulls_enabled[2]{};
   om::lever::AutomatedPull automated_pulls[2]{};
@@ -382,6 +384,12 @@ void setup(App& app) {
 
   auto buff_p2 = std::string{ OM_RES_DIR } + "/sounds/failed_beep.wav";
   app.failed_pull_audio_buffer = om::audio::read_buffer(buff_p2.c_str());
+
+  // for Koala and Vermelho the start_trial_beep are different
+  if (app.lever1_animal == "Koala" || app.lever2_animal == "Koala") {
+    auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep_VermKoala.wav";
+    app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
+  }
 
   // define the threshold of pulling
   const float dflt_rising_edge = 0.475f;  // 0.6f
