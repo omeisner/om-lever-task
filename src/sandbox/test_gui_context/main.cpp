@@ -111,12 +111,12 @@ struct App : public om::App {
   // Some of these variable can be changed accordingly for each session. - Weikang
 
   // file name
-  std::string lever1_animal{ "Dodson" };
-  std::string lever2_animal{ "Ginger" };
+  std::string lever1_animal{ "Dannon" };
+  std::string lever2_animal{ "Kanga" };
 
 
 
-  std::string experiment_date{ "20240116" };
+  std::string experiment_date{ "20240227" };
 
   //std::string trialrecords_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_TrialRecord_1.json" ;
   //std::string bhvdata_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_bhv_data_1.json" ;
@@ -124,7 +124,7 @@ struct App : public om::App {
   //std::string leverread_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_lever_reading_1.json";
 
 
-  int tasktype{ 1 }; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training
+  int tasktype{ 3 }; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training
 
   // int tasktype{rand()%2}; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training 
   // int tasktype{ rand()%4}; // indicate the task type and different cue color: 0 no reward; 1 - self; 2 - altruistic; 3 - cooperative; 4  - for training 
@@ -200,11 +200,15 @@ struct App : public om::App {
   om::Vec2f stim1_size{ 0.2f };
   om::Vec2f stim1_offset{ 0.4f, 0.25f };
   om::Vec3f stim1_color{ 1.0f };
-  om::Vec3f stim1_color_noreward{ 1.0f, 1.0f, 0.0f };
+  om::Vec3f stim1_color_noreward{ 0.5f, 0.5f, 0.5f };
   om::Vec3f stim1_color_cooper{ 1.0f, 1.0f, 0.0f };
   om::Vec3f stim1_color_disappear{ 0.0f };
+
   // initiate stimuli if using other images (non colored squares)
   std::optional<om::gfx::TextureHandle> debug_image;
+  std::optional<om::gfx::TextureHandle> debug_image_0;
+  std::optional<om::gfx::TextureHandle> debug_image_2;
+  std::optional<om::gfx::TextureHandle> debug_image_3;
 
   // struct for saving data
   // std::ofstream save_trial_data_file;
@@ -355,30 +359,47 @@ void setup(App& app) {
   
   //auto buff_p = std::string{OM_RES_DIR} + "/sounds/piano-c.wav";
   //app.debug_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-  if (app.tasktype == 0) {
-    auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
-    app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-    auto debug_image_p = std::string{ OM_RES_DIR } + "/images/calla_leaves.png";
-    app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+
+  if (0) {
+    if (app.tasktype == 0) {
+      auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
+      app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
+      auto debug_image_p = std::string{ OM_RES_DIR } + "/images/calla_leaves.png";
+      app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+    }
+    else if (app.tasktype == 1 || app.tasktype == 4) {
+      auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
+      app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
+      // auto debug_image_p = std::string{ OM_RES_DIR } + "/images/calla_leaves.png";
+      // app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+    }
+    else if (app.tasktype == 2) {
+      auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
+      app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
+      auto debug_image_p = std::string{ OM_RES_DIR } + "/images/blue_triangle.png";
+      app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+    }
+    else if (app.tasktype == 3) {
+      auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
+      app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
+      auto debug_image_p = std::string{ OM_RES_DIR } + "/images/yellow_circle.png";
+      app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+    }
   }
-  else if (app.tasktype == 1 || app.tasktype == 4) {
-    auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
-    app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-    // auto debug_image_p = std::string{ OM_RES_DIR } + "/images/calla_leaves.png";
-    // app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
-  }
-  else if (app.tasktype == 2) {
-    auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
-    app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-    auto debug_image_p = std::string{ OM_RES_DIR } + "/images/blue_triangle.png";
-    app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
-  }
-  else if (app.tasktype == 3) {
-    auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
-    app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-    auto debug_image_p = std::string{ OM_RES_DIR } + "/images/yellow_circle.png";
-    app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
-  }
+
+  auto debug_image_0 = std::string{ OM_RES_DIR } + "/images/calla_leaves.png";
+  app.debug_image_0 = om::gfx::read_2d_image(debug_image_0.c_str());
+
+  auto debug_image_2 = std::string{ OM_RES_DIR } + "/images/blue_triangle.png";
+  app.debug_image_2 = om::gfx::read_2d_image(debug_image_2.c_str());
+
+  auto debug_image_3 = std::string{ OM_RES_DIR } + "/images/yellow_circle.png";
+  app.debug_image_3 = om::gfx::read_2d_image(debug_image_3.c_str());
+
+
+  auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
+  app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
+
   auto buff_p1 = std::string{ OM_RES_DIR } + "/sounds/successful_beep.wav";
   app.sucessful_pull_audio_buffer = om::audio::read_buffer(buff_p1.c_str());
 
@@ -546,7 +567,7 @@ void render_gui(App& app) {
   //  app.lever2_animal = m2_name.value();
   //}
 
-  if (0) {
+  if (1) {
     int tasktype_gui[1]{ app.tasktype };
     if (ImGui::InputInt("Task_Type", tasktype_gui, 0, 0, enter_flag)) {
       app.tasktype = tasktype_gui[0];
@@ -1061,8 +1082,8 @@ void task_update(App& app) {
       if (app.tasktype == 0) {
         //auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
         //app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-        // auto debug_image_p = std::string{ OM_RES_DIR } + "/images/calla_leaves.png";
-        // app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+        //auto debug_image_p = std::string{ OM_RES_DIR } + "/images/calla_leaves.png";
+        //app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
         //
         new_trial.stim0_image = std::nullopt;
         new_trial.stim1_image = std::nullopt;
@@ -1081,20 +1102,24 @@ void task_update(App& app) {
       else if (app.tasktype == 2) {
         //auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
         //app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-        //auto debug_image_p = std::string{ OM_RES_DIR } + "/images/blue_triangle.png";
-       // app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+        // auto debug_image_p = std::string{ OM_RES_DIR } + "/images/blue_triangle.png";
+        // app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
         //
-        new_trial.stim0_image = app.debug_image;
-        new_trial.stim1_image = app.debug_image;
+        // new_trial.stim0_image = app.debug_image;
+        // new_trial.stim1_image = app.debug_image;
+        new_trial.stim0_image = app.debug_image_2;
+        new_trial.stim1_image = app.debug_image_2;
       }
       else if (app.tasktype == 3) {
         //auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
         //app.start_trial_audio_buffer = om::audio::read_buffer(buff_p.c_str());
-        //auto debug_image_p = std::string{ OM_RES_DIR } + "/images/yellow_circle.png";
-        //app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
+        // auto debug_image_p = std::string{ OM_RES_DIR } + "/images/yellow_circle.png";
+        // app.debug_image = om::gfx::read_2d_image(debug_image_p.c_str());
         //
-        new_trial.stim0_image = app.debug_image;
-        new_trial.stim1_image = app.debug_image;
+        // new_trial.stim0_image = app.debug_image;
+        // new_trial.stim1_image = app.debug_image;
+        new_trial.stim0_image = app.debug_image_3;
+        new_trial.stim1_image = app.debug_image_3;
       }
       else if (app.tasktype == 4) {
         //auto buff_p = std::string{ OM_RES_DIR } + "/sounds/start_trial_beep.wav";
