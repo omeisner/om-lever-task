@@ -111,12 +111,10 @@ struct App : public om::App {
   // Some of these variable can be changed accordingly for each session. - Weikang
 
   // file name
-  std::string lever1_animal{ "Dannon" };
+  std::string lever1_animal{ "Dodson" };
   std::string lever2_animal{ "Kanga" };
-
-
-
-  std::string experiment_date{ "20240227" };
+  
+  std::string experiment_date{ "20250409" };
 
   //std::string trialrecords_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_TrialRecord_1.json" ;
   //std::string bhvdata_name = experiment_date + "_" + lever1_animal + "_" + lever2_animal + "_bhv_data_1.json" ;
